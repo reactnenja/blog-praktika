@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import { Input } from "./ui";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUserStart } from "./slice/auth";
+import {
+  registerUserFailure,
+  registerUserStart,
+  registerUserSuccess,
+} from "./slice/auth";
+import AuthService from "../service/auth";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -11,14 +16,30 @@ const Register = () => {
   const distpach = useDispatch();
   const { isLoading } = useSelector((state) => state.auth);
 
-  const handleRegister = (e) => {
+  const registerButton = async (e) => {
     e.preventDefault();
     distpach(registerUserStart());
+
+    const user = {
+      username: name,
+      email,
+      password,
+    };
+    try {
+      const response = await AuthService.UseRegister(user);
+      console.log(response);
+
+      distpach(registerUserSuccess());
+    } catch (error) {
+      console.error(error); // Errorni consolega chiqaring
+      distpach(registerUserFailure());
+    }
   };
+
   return (
     <div className="container">
       <main className="form-signin w-25 m-auto">
-        <form style={{ marginTop: "100px" }} className="rounded  border p-4">
+        <form style={{ marginTop: "100px" }} className="rounded border p-4">
           <Link
             to={"/"}
             className="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none"
@@ -51,7 +72,7 @@ const Register = () => {
           <button
             className="btn btn-primary w-100 py-3 my-2"
             type="submit"
-            onClick={handleRegister}
+            onClick={registerButton}
           >
             {isLoading ? "Loading..." : "Register"}
           </button>
