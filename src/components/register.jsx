@@ -2,10 +2,19 @@ import Logo from "../assets/logo.jpg";
 import { Link } from "react-router-dom";
 import { Input } from "./ui";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUserStart } from "./slice/auth";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const distpach = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    distpach(registerUserStart());
+  };
   return (
     <div className="container">
       <main className="form-signin w-25 m-auto">
@@ -39,8 +48,12 @@ const Register = () => {
             state={password}
             setState={setPassword}
           />
-          <button className="btn btn-primary w-100 py-3 my-2" type="submit">
-            Register
+          <button
+            className="btn btn-primary w-100 py-3 my-2"
+            type="submit"
+            onClick={handleRegister}
+          >
+            {isLoading ? "Loading..." : "Register"}
           </button>
         </form>
       </main>
