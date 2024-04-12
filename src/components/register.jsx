@@ -9,7 +9,7 @@ const Register = () => {
   return (
     <div className="container">
       <main className="form-signin w-25 m-auto">
-        <form>
+        <form style={{ marginTop: "100px" }} className="rounded  border p-4">
           <Link
             to={"/"}
             className="d-flex justify-content-center align-items-center link-body-emphasis text-decoration-none"
